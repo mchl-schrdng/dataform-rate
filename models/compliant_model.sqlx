@@ -1,0 +1,58 @@
+config {
+  name: "compliant_model",
+  description: "A fully compliant model with all best practices followed.",
+  columns: {
+    comment_id: "Unique identifier for each comment.",
+    subreddit: "Reddit community the comment belongs to.",
+    author: "Reddit user who made the comment.",
+    comment_text: "The body of text for the comment.",
+    total_words: "Total number of words in the comment.",
+    reading_ease_score: "Float value indicating comment readability.",
+    reading_ease: "Plain-text English categorization of readability.",
+    reading_grade_level: "Plain-text English categorization by school grade level.",
+    sentiment_score: "Float value for sentiment of comment between -1 and 1.",
+    censored: "Whether the comment was censored upstream.",
+    positive: "One-hot encoding for positive sentiment.",
+    neutral: "One-hot encoding for neutral sentiment.",
+    negative: "One-hot encoding for negative sentiment.",
+    subjectivity_score: "Float value for comment subjectivity.",
+    subjective: "One-hot encoding for subjective content.",
+    url: "Link to the comment on Reddit.",
+    comment_date: "Timestamp for when the comment occurred.",
+    comment_hour: "Integer for hour of comment post time.",
+    comment_year: "Integer for year of comment post time.",
+    comment_month: "Integer for month of comment post time.",
+    comment_day: "Integer for day of comment post time."
+  },
+  bigquery: {
+    partitionBy: "comment_date",
+    labels: {
+      cost_center: "123456"
+    }
+  }
+}
+
+SELECT
+  comment_id,
+  subreddit,
+  author,
+  comment_text,
+  total_words,
+  reading_ease_score,
+  reading_ease,
+  reading_grade_level,
+  sentiment_score,
+  censored,
+  positive,
+  neutral,
+  negative,
+  subjectivity_score,
+  subjective,
+  url,
+  comment_date,
+  comment_hour,
+  comment_year,
+  comment_month,
+  comment_day
+FROM
+  raw_comments

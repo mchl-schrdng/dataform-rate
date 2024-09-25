@@ -1,0 +1,20 @@
+config {
+  name: "non_compliant_model",
+  description: "",  // Missing description
+  columns: {
+    user_id: "",  // Missing column description
+    email: "Email address of the user.",
+    signup_date: "Date when the user signed up."
+  },
+  meta: {
+    // Missing owner
+  },
+  tags: ["user_data"]
+}
+
+SELECT
+  user_id,
+  email,
+  signup_date
+FROM
+  raw_users
