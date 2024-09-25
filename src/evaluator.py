@@ -3,7 +3,6 @@ from rules import (
     has_mandatory_metadata,
     naming_conventions,
     columns_have_descriptions,
-    has_unique_identifier,
     has_partitioning,
     has_required_labels,
     avoid_select_star,

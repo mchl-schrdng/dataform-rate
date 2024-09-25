@@ -42,17 +42,6 @@ def columns_have_descriptions(model):
             severity='ERROR'
         )
 
-def has_unique_identifier(model):
-    unique_id_columns = ['comment_id', 'user_id'] 
-    columns = model.get('columns', {})
-    for uid in unique_id_columns:
-        if uid in columns:
-            return None  # Passes
-    return RuleViolation(
-        message="Model lacks a unique identifier column.",
-        severity='ERROR'
-    )
-
 def has_partitioning(model):
     bigquery = model.get('bigquery', {})
     partition_by = bigquery.get('partitionBy')
@@ -107,7 +96,6 @@ RULES = [
     has_mandatory_metadata,
     naming_conventions,
     columns_have_descriptions,
-    has_unique_identifier,
     has_partitioning,
     has_required_labels,
     avoid_select_star,
