@@ -32,8 +32,8 @@ Console Output Example:
 
 ```bash
 ERRORS:
-[ERROR] model_1 (../models/model_1.sqlx): Missing mandatory metadata fields: description, tags.
-[WARNING] model_2 (../models/model_2.sqlx): SQL code exceeds 200 lines.
+[ERROR] model_1 (../definitions/model_1.sqlx): Missing mandatory metadata fields: description, tags.
+[WARNING] model_2 (../definitions/model_2.sqlx): SQL code exceeds 200 lines.
 ```
 
 JSON output example:
@@ -41,14 +41,14 @@ JSON output example:
 [
   {
     "model": "model_1",
-    "file_path": "../models/model_1.sqlx",
+    "file_path": "../definitions/model_1.sqlx",
     "rule": "has_mandatory_metadata",
     "message": "Missing mandatory metadata fields: description, tags.",
     "severity": "ERROR"
   },
   {
     "model": "model_2",
-    "file_path": "../models/model_2.sqlx",
+    "file_path": "../definitions/model_2.sqlx",
     "rule": "sql_line_limit",
     "message": "SQL code exceeds 200 lines.",
     "severity": "WARNING"
