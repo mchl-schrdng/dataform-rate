@@ -1,0 +1,29 @@
+name: Dataform Best Practice Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-dataform-rate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Dataform repo
+        uses: actions/checkout@v3
+      
+      - name: Clone dataform-rate repository
+        run: git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run Dataform Rate Check
+        run: |
+          python dataform-rate/src/main.py --model-path './definitions/**/*.sqlx' --output-format console
