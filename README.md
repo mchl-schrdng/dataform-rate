@@ -18,7 +18,7 @@ Dataform Rate is a Python tool that analyzes your Dataform project, evaluates it
 To run the Dataform Rate Tool, use the following command:
 
 ```bash
-python main.py --model-path '../models/**/*.sqlx' --max-lines 200 --output-format console
+python main.py --model-path '../definitions/**/*.sqlx' --max-lines 200 --output-format console
 ```
 
 ## Command-Line arguments
