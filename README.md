@@ -65,5 +65,41 @@ def new_rule(model):
     return RuleViolation(message="Violation example", severity="ERROR")
 ```
 
+## How to setup a GitHub actions
+
+If you want to implement these checks in your pipeline (and you are using GitHub), you can add a .yml file in the .github/workflows folder by following this example.
+
+```yaml
+name: Dataform Best Practice Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-dataform-rate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Dataform repo
+        uses: actions/checkout@v3
+      
+      - name: Clone dataform-rate repository
+        run: git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run Dataform Rate Check
+        run: |
+          python dataform-rate/src/main.py --model-path './definitions/**/*.sqlx' --output-format console
+```
+
 ## Contributing
 Contributions are welcome! Please submit a pull request or open an issue if you have suggestions or bug reports.
