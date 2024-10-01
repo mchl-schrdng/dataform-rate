@@ -30,9 +30,10 @@ jobs:
         run: pip install bump2version
 
       - name: Bump version
+        id: bump_version
         run: |
           bump2version patch  # Or 'minor' or 'major'
-
+      
       - name: Push changes and tag
         run: |
           git push origin main --follow-tags
@@ -40,6 +41,6 @@ jobs:
       - name: Create GitHub release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          tag: ${{ steps.bump_version.outputs.new_version }}
+          name: Release ${{ steps.bump_version.outputs.new_version }}
           body: "Automatic version bump using bump2version"
