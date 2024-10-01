@@ -1,14 +1,21 @@
-name: 'Usage of release-action GitHub Action'
+name: Create GitHub Release
+
 on:
-push:
-    branches:
-        - main
+  push:
+    tags:
+      - '*'
+
 jobs:
-deploy:
+  create_release:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: ncipollo/release-action@v1
-      with:
-        artifacts: "release.tar.gz,foo/*.txt"
-        bodyFile: "body.md"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          body: "Automatic release created using GitHub Actions."
