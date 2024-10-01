@@ -1,4 +1,4 @@
-name: Release
+name: Version Bump and Release
 
 on:
   push:
@@ -6,22 +6,32 @@ on:
       - main
 
 jobs:
-  release:
+  bump_version:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
         with:
-          node-version: '16'  # Use Node.js 16 or higher
+          python-version: '3.x'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install bump2version
+        run: pip install bump2version
 
-      - name: Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+      - name: Bump version
+        run: |
+          bump2version patch  # or 'minor' or 'major'
+      
+      - name: Push changes and tag
+        run: |
+          git push origin main --follow-tags
+
+      - name: Create GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          body: "Automatic version bump using bump2version"
