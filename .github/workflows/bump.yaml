@@ -1,28 +1,34 @@
-name: Bump version workflow
+name: Bump Version Workflow
 
 on:
   push:
     branches:
-    - main
+      - main  # Trigger on pushes to the main branch
 
 jobs:
   bump-version:
     name: Bump package version
-    if: "!contains(github.event.head_commit.message, 'Bump version')"
+    if: "!contains(github.event.head_commit.message, 'Bump version')"  # Avoid version bumps triggering themselves
     runs-on: ubuntu-20.04
+
+    permissions:
+      contents: write  # This gives write access to push changes back to the repo
+
     steps:
-    - name: actions/checkout
-      uses: actions/checkout@v2
-      with:
-          persist-credentials: false
-    - name: current_version
-      run: echo "current_version=$(grep '# version' version.md | cut -d ' ' -f3)" >> $GITHUB_ENV
-    - name: FragileTech/bump-version
-      uses: FragileTech/bump-version@main
-      with:
-        current_version: "${{ env.current_version }}"
-        files: version.md
-        commit_name: Your Company Bot
-        commit_email: bot@your-company.com
-        login: your-bot-login
-        token: "${{ secrets.BOT_TOKEN }}"
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false  # This ensures we use GITHUB_TOKEN, not the default GitHub credentials
+
+      - name: Get current version
+        run: echo "current_version=$(grep '# version' version.md | cut -d ' ' -f3)" >> $GITHUB_ENV
+
+      - name: Bump version
+        uses: FragileTech/bump-version@main
+        with:
+          current_version: "${{ env.current_version }}"
+          files: version.md  # Update the version in version.md
+          commit_name: GitHub Actions Bot
+          commit_email: actions@github.com
+          login: github-actions[bot]  # This uses the built-in GitHub Actions bot login
+          token: "${{ secrets.GITHUB_TOKEN }}"  # Use the built-in GITHUB_TOKEN to push the commit and tag
