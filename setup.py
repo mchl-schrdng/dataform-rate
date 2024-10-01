@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dataform-rate",
-    version="0.1.1",
+    version="0.1.2",
     description="Simple tool to test your Dataform project",
     author="Mchl Schrdng",
     author_email="mchl.schrdng@gmail.com",
