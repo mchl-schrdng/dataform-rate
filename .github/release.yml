@@ -1,0 +1,34 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: "3.11"
+      - name: Publish package distributions to PyPI
+        run: |
+          pdm publish
+      - name: Install dependencies
+        run: |
+          pdm sync -G docs
+      - name: Deploy docs
+        run: |
+          pdm run dbt-score list -f markdown -n dbt_score.rules.generic --title Generic > docs/rules/generic.md
+          pdm run mkdocs gh-deploy --force
+      - uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
