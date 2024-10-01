@@ -18,13 +18,18 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Set up Git identity
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
       - name: Install bump2version
         run: pip install bump2version
 
       - name: Bump version
         run: |
-          bump2version patch  # or 'minor' or 'major'
-      
+          bump2version patch  # Or 'minor' or 'major'
+
       - name: Push changes and tag
         run: |
           git push origin main --follow-tags
