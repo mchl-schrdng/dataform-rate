@@ -16,7 +16,7 @@ It's currently in an early stage, available as a proof of concept
 
 ## Usage
 
-To run the Dataform Rate Tool, use the following command:
+To run the Dataform Rate Tool, use the following command: 
 
 ```bash
 python main.py --model-path '../definitions/**/*.sqlx' --max-lines 200 --output-format console
