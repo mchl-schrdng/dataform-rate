@@ -90,7 +90,10 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Clone dataform-rate repository
-        run: git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
+        run: |
+          git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
+          cd dataform-rate
+          git checkout 0.1.1 # release you want to use
 
       - name: Set up Python
         uses: actions/setup-python@v4
