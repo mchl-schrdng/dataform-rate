@@ -7,7 +7,8 @@ from rules import (
     has_required_labels,
     avoid_select_star,
     sql_line_limit,
-    comprehensive_description
+    comprehensive_description,
+    avoid_hardcoded_values
 )
 
 def evaluate_models(models, **kwargs):

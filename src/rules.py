@@ -91,6 +91,17 @@ def comprehensive_description(model):
             message="Model description is too short; consider providing more details.",
             severity='WARNING'  
         )
+
+def avoid_hardcoded_values(model):
+    sql_code = model.get('sql_code', '')
+    hardcoded_values = re.findall(r"[\s,(](\d+|'[^']+'|\"[^\"]+\")", sql_code)
+    if hardcoded_values:
+        unique_values = set(hardcoded_values)
+        return RuleViolation(
+            message="SQL query contains hardcoded values: " + ', '.join(unique_values),
+            severity='WARNING'
+        )
+    return None  
     
 RULES = [
     has_mandatory_metadata,
@@ -100,5 +111,6 @@ RULES = [
     has_required_labels,
     avoid_select_star,
     sql_line_limit,
-    comprehensive_description
+    comprehensive_description,
+    avoid_hardcoded_values
 ]
