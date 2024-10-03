@@ -6,7 +6,7 @@ class RuleViolation:
         self.severity = severity.upper()  
 
 def has_mandatory_metadata(model):
-    mandatory_fields = ['name', 'description', 'schema', 'columns', 'meta', 'tags']
+    mandatory_fields = ['name', 'description', 'schema', 'columns', 'tags']
     missing_fields = [field for field in mandatory_fields if not model.get(field)]
     if missing_fields:
         return RuleViolation(
