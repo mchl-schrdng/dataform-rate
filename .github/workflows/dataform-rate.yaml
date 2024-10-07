@@ -1,6 +1,7 @@
 name: Dataform Best Practice Check
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch
 
 jobs:
   run-dataform-rate:
@@ -11,7 +12,10 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Clone dataform-rate repository
-        run: git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
+        run: |
+          git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
+          cd dataform-rate
+          git checkout ${{ github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
