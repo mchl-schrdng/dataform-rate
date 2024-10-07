@@ -15,7 +15,6 @@ jobs:
         run: |
           git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
           cd dataform-rate
-          git checkout ${{ github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
