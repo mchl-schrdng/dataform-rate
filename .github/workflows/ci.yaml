@@ -1,33 +1,44 @@
-name: CI
+name: Run tests and upload coverage
 
-on:
+on: 
   workflow_dispatch:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
 
 jobs:
   test:
+    name: Run tests and collect coverage
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install pytest
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
 
-    - name: Run tests
-      run: |
-        source venv/bin/activate
-        export PYTHONPATH=$(pwd)/src
-        pytest tests/
+      - name: Run tests and collect coverage
+        run: |
+          source venv/bin/activate
+          export PYTHONPATH=$(pwd)/src  # Définir le chemin pour les sources
+          pytest --cov=src --cov-report=xml tests/  # Exécuter les tests dans le bon répertoire
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
