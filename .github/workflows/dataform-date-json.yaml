@@ -1,4 +1,4 @@
-name: Dataform Rate
+name: Dataform Rate json
 
 on:
   workflow_dispatch
@@ -28,4 +28,4 @@ jobs:
 
       - name: Run Dataform Rate Check
         run: |
-          python dataform-rate/src/main.py --model-path './definitions/**/*.sqlx' --output-format console
+          python dataform-rate/src/main.py --model-path './definitions/**/*.sqlx' --output-format json
