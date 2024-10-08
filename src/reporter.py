@@ -1,6 +1,12 @@
-def report_violations(violations, output_format='console'):
+from loguru import logger
+
+# Configure logger for custom formatting
+logger.remove()
+logger.add(lambda msg: print(msg, end=""), format="{message}")
+
+def report_violations(violations):
     if not violations:
-        print('All models passed the best practice checks!')
+        logger.info("✅ [green]All models passed the best practice checks![/green]")
         return
 
     # Organize violations by file
@@ -25,39 +31,35 @@ def report_violations(violations, output_format='console'):
     total_files = len(violations_by_file)
     files_without_issues = total_files - len([f for f in violations_by_file if violations_by_file[f]['errors'] or violations_by_file[f]['warnings']])
 
-    # Summary
-    summary = f"Summary:\nTotal Errors: {total_errors}\nTotal Warnings: {total_warnings}\nTotal Files Checked: {total_files}\nFiles Without Issues: {files_without_issues}"
-    
-    if output_format == 'console':
-        print(summary)
-        print('\nDetailed Report by File:')
+    # Strong delimiters
+    delimiter = "=" * 60
+    logger.info(delimiter)
+    logger.info("Summary")
+    logger.info(delimiter)
 
-        for file_path, issues in violations_by_file.items():
-            print(f"\nFile: {file_path}")
-            
-            if issues['errors']:
-                print("  Errors:")
-                for error in issues['errors']:
-                    print(f"    - [{error['severity']}] {error['message']}")
-            
-            if issues['warnings']:
-                print("  Warnings:")
-                for warning in issues['warnings']:
-                    print(f"    - [{warning['severity']}] {warning['message']}")
-            if not issues['errors'] and not issues['warnings']:
-                print("  No issues found.")
-                
-    elif output_format == 'json':
-        import json
-        print(json.dumps({
-            'summary': {
-                'total_errors': total_errors,
-                'total_warnings': total_warnings,
-                'total_files': total_files,
-                'files_without_issues': files_without_issues
-            },
-            'violations_by_file': violations_by_file
-        }, indent=2))
+    # Summary section
+    logger.info(f"❌ [red]Total Errors:[/red] {total_errors}")
+    logger.info(f"⚠️ [yellow]Total Warnings:[/yellow] {total_warnings}")
+    logger.info(f"📂 Total Files Checked: {total_files}")
+    logger.info(f"✅ Files Without Issues: {files_without_issues}")
+    logger.info(delimiter)
 
-    else:
-        print(f"Unsupported output format: {output_format}")
+    # Detailed report by file
+    logger.info("Detailed Errors")
+    logger.info(delimiter)
+
+    for file_path, issues in violations_by_file.items():
+        logger.info(f"📄 File: {file_path}")
+
+        if issues['errors']:
+            logger.info("[red]  Errors:[/red]")
+            for error in issues['errors']:
+                logger.info(f"    ❌ [{error['severity']}] {error['message']}")
+
+        if issues['warnings']:
+            logger.info("[yellow]  Warnings:[/yellow]")
+            for warning in issues['warnings']:
+                logger.info(f"    ⚠️ [{warning['severity']}] {warning['message']}")
+
+    logger.info(delimiter)
+    logger.info("Completed validation")
