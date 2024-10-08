@@ -3,7 +3,7 @@
 Dataform Rate is a Python tool that analyzes your Dataform project, evaluates it against best practices, and reports any violations.
 It's currently in an early stage, available as a proof of concept 
 
-![image](https://github.com/user-attachments/assets/1b0895ff-a52b-4ca2-b791-5a1a55e3aec6)
+![image](https://github.com/user-attachments/assets/c2368410-7d3c-429b-a156-2ba646747dce)
 
 ## Features
 
@@ -32,9 +32,34 @@ python main.py --model-path '../definitions/**/*.sqlx' --max-lines 200 --output-
 Console Output Example:
 
 ```bash
-ERRORS:
-[ERROR] model_1 (../definitions/model_1.sqlx): Missing mandatory metadata fields: description, tags.
-[WARNING] model_2 (../definitions/model_2.sqlx): SQL code exceeds 200 lines.
+============================================================
+Summary
+============================================================
+❌ Total Errors: 6
+⚠️ Total Warnings: 3
+📂 Total Files Checked: 2
+✅ Files Without Issues: 0
+============================================================
+Detailed Errors
+============================================================
+📄 File: ./definitions/non_compliant_model.sqlx
+  Errors:
+Error: ERROR] Missing mandatory metadata fields: description, schema.
+Error: ERROR] Model is missing partitioning information.
+Error: ERROR] Missing required labels: env, team.
+  Warnings:
+Warning: ARNING] Columns missing descriptions: user_id.
+Warning: ARNING] Description is too short; provide a more comprehensive description.
+------------------------------------------------------------
+📄 File: ./definitions/compliant_model.sqlx
+  Errors:
+Error: ERROR] Missing mandatory metadata fields: schema, tags.
+Error: ERROR] Model is missing partitioning information.
+Error: ERROR] Missing required labels: env, team.
+  Warnings:
+Warning: ARNING] Description is too short; provide a more comprehensive description.
+------------------------------------------------------------
+Completed validation
 ```
 
 JSON output example:
@@ -81,24 +106,29 @@ on:
     branches:
       - main
 
-jobs:
+jjobs:
   run-dataform-rate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Dataform repo
+      - name: Checkout Dataform repo (where the action is running)
         uses: actions/checkout@v3
-      
-      - name: Clone dataform-rate repository
-        run: |
-          git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
-          cd dataform-rate
-          git checkout 0.1.1 # release you want to use
+
+      - name: Checkout dataform-rate repository (pinned version)
+        uses: actions/checkout@v3
+        with:
+          repository: mchl-schrdng/dataform-rate
+          path: dataform-rate
+          ref: v0.1.0  # Use the version you want to use.
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r dataform-rate/requirements.txt
 
       - name: Run Dataform Rate Check
         run: |
