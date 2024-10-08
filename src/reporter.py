@@ -4,7 +4,7 @@ from loguru import logger
 logger.remove()
 logger.add(lambda msg: print(msg, end=""), format="{message}")
 
-def report_violations(violations):
+def report_violations(violations, output_format='console'):
     if not violations:
         logger.info("✅ [green]All models passed the best practice checks![/green]")
         return
@@ -33,33 +33,53 @@ def report_violations(violations):
 
     # Strong delimiters
     delimiter = "=" * 60
-    logger.info(delimiter)
-    logger.info("Summary")
-    logger.info(delimiter)
 
-    # Summary section
-    logger.info(f"❌ [red]Total Errors:[/red] {total_errors}")
-    logger.info(f"⚠️ [yellow]Total Warnings:[/yellow] {total_warnings}")
-    logger.info(f"📂 Total Files Checked: {total_files}")
-    logger.info(f"✅ Files Without Issues: {files_without_issues}")
-    logger.info(delimiter)
+    if output_format == 'console':
+        # Console output
+        logger.info(delimiter)
+        logger.info("Summary")
+        logger.info(delimiter)
 
-    # Detailed report by file
-    logger.info("Detailed Errors")
-    logger.info(delimiter)
+        # Summary section
+        logger.info(f"❌ [red]Total Errors:[/red] {total_errors}")
+        logger.info(f"⚠️ [yellow]Total Warnings:[/yellow] {total_warnings}")
+        logger.info(f"📂 Total Files Checked: {total_files}")
+        logger.info(f"✅ Files Without Issues: {files_without_issues}")
+        logger.info(delimiter)
 
-    for file_path, issues in violations_by_file.items():
-        logger.info(f"📄 File: {file_path}")
+        # Detailed report by file
+        logger.info("Detailed Errors")
+        logger.info(delimiter)
 
-        if issues['errors']:
-            logger.info("[red]  Errors:[/red]")
-            for error in issues['errors']:
-                logger.info(f"    ❌ [{error['severity']}] {error['message']}")
+        for file_path, issues in violations_by_file.items():
+            logger.info(f"📄 File: {file_path}")
 
-        if issues['warnings']:
-            logger.info("[yellow]  Warnings:[/yellow]")
-            for warning in issues['warnings']:
-                logger.info(f"    ⚠️ [{warning['severity']}] {warning['message']}")
+            if issues['errors']:
+                logger.info("[red]  Errors:[/red]")
+                for error in issues['errors']:
+                    logger.info(f"    ❌ [{error['severity']}] {error['message']}")
 
-    logger.info(delimiter)
-    logger.info("Completed validation")
+            if issues['warnings']:
+                logger.info("[yellow]  Warnings:[/yellow]")
+                for warning in issues['warnings']:
+                    logger.info(f"    ⚠️ [{warning['severity']}] {warning['message']}")
+
+        logger.info(delimiter)
+        logger.info("Completed validation")
+    
+    elif output_format == 'json':
+        # JSON output
+        import json
+        result = {
+            "summary": {
+                "total_errors": total_errors,
+                "total_warnings": total_warnings,
+                "total_files": total_files,
+                "files_without_issues": files_without_issues
+            },
+            "violations_by_file": violations_by_file
+        }
+        logger.info(json.dumps(result, indent=2))
+    
+    else:
+        logger.error(f"Unsupported output format: {output_format}")
