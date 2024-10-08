@@ -26,6 +26,6 @@ jobs:
         run: |
           pip install -r dataform-rate/requirements.txt
 
-      - name: Dataform Rate
+      - name: Run Dataform Rate Check
         run: |
           python dataform-rate/src/main.py --model-path './definitions/**/*.sqlx' --output-format console
