@@ -3,7 +3,7 @@
 Dataform Rate is a Python tool that analyzes your Dataform project, evaluates it against best practices, and reports any violations.
 It's currently in an early stage, available as a proof of concept 
 
-![image](https://github.com/user-attachments/assets/1b0895ff-a52b-4ca2-b791-5a1a55e3aec6)
+![image](https://github.com/user-attachments/assets/c2368410-7d3c-429b-a156-2ba646747dce)
 
 ## Features
 
@@ -32,9 +32,34 @@ python main.py --model-path '../definitions/**/*.sqlx' --max-lines 200 --output-
 Console Output Example:
 
 ```bash
-ERRORS:
-[ERROR] model_1 (../definitions/model_1.sqlx): Missing mandatory metadata fields: description, tags.
-[WARNING] model_2 (../definitions/model_2.sqlx): SQL code exceeds 200 lines.
+============================================================
+Summary
+============================================================
+❌ Total Errors: 6
+⚠️ Total Warnings: 3
+📂 Total Files Checked: 2
+✅ Files Without Issues: 0
+============================================================
+Detailed Errors
+============================================================
+📄 File: ./definitions/non_compliant_model.sqlx
+  Errors:
+Error: ERROR] Missing mandatory metadata fields: description, schema.
+Error: ERROR] Model is missing partitioning information.
+Error: ERROR] Missing required labels: env, team.
+  Warnings:
+Warning: ARNING] Columns missing descriptions: user_id.
+Warning: ARNING] Description is too short; provide a more comprehensive description.
+------------------------------------------------------------
+📄 File: ./definitions/compliant_model.sqlx
+  Errors:
+Error: ERROR] Missing mandatory metadata fields: schema, tags.
+Error: ERROR] Model is missing partitioning information.
+Error: ERROR] Missing required labels: env, team.
+  Warnings:
+Warning: ARNING] Description is too short; provide a more comprehensive description.
+------------------------------------------------------------
+Completed validation
 ```
 
 JSON output example:
