@@ -1,12 +1,12 @@
 from loguru import logger
 
-# Configure logger for custom formatting
+# Configure logger for custom formatting (no color)
 logger.remove()
-logger.add(lambda msg: print(msg, end=""), format="{message}")
+logger.add(lambda msg: print(msg, end=""), format="{message}", colorize=False)
 
 def report_violations(violations, output_format='console'):
     if not violations:
-        logger.info("✅ [green]All models passed the best practice checks![/green]")
+        logger.info("✅ All models passed the best practice checks!")
         return
 
     # Organize violations by file
@@ -33,6 +33,7 @@ def report_violations(violations, output_format='console'):
 
     # Strong delimiters
     delimiter = "=" * 60
+    file_separator = "-" * 60
 
     if output_format == 'console':
         # Console output
@@ -41,8 +42,8 @@ def report_violations(violations, output_format='console'):
         logger.info(delimiter)
 
         # Summary section
-        logger.info(f"❌ [red]Total Errors:[/red] {total_errors}")
-        logger.info(f"⚠️ [yellow]Total Warnings:[/yellow] {total_warnings}")
+        logger.info(f"❌ Total Errors: {total_errors}")
+        logger.info(f"⚠️ Total Warnings: {total_warnings}")
         logger.info(f"📂 Total Files Checked: {total_files}")
         logger.info(f"✅ Files Without Issues: {files_without_issues}")
         logger.info(delimiter)
@@ -55,16 +56,18 @@ def report_violations(violations, output_format='console'):
             logger.info(f"📄 File: {file_path}")
 
             if issues['errors']:
-                logger.info("[red]  Errors:[/red]")
+                logger.info("  Errors:")
                 for error in issues['errors']:
                     logger.info(f"    ❌ [{error['severity']}] {error['message']}")
 
             if issues['warnings']:
-                logger.info("[yellow]  Warnings:[/yellow]")
+                logger.info("  Warnings:")
                 for warning in issues['warnings']:
                     logger.info(f"    ⚠️ [{warning['severity']}] {warning['message']}")
 
-        logger.info(delimiter)
+            # Add file separator after each file's details
+            logger.info(file_separator)
+
         logger.info("Completed validation")
     
     elif output_format == 'json':
