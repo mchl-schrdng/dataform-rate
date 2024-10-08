@@ -1,4 +1,4 @@
-name: Dataform Rate
+name: Dataform Rate json
 
 on:
   workflow_dispatch
@@ -26,6 +26,6 @@ jobs:
         run: |
           pip install -r dataform-rate/requirements.txt
 
-      - name: Run Dataform Rate Check
+      - name: Run Dataform Rate json
         run: |
-          python dataform-rate/src/main.py --model-path './definitions/**/*.sqlx' --output-format console
+          python dataform-rate/src/main.py --model-path './definitions/**/*.sqlx' --output-format json

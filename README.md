@@ -8,8 +8,6 @@
 Dataform Rate is a Python tool that analyzes your Dataform project, evaluates it against best practices, and reports any violations.
 It's currently in an early stage, available as a proof of concept 
 
-![image](https://github.com/user-attachments/assets/c2368410-7d3c-429b-a156-2ba646747dce)
-
 ## Features
 
 - **Metadata validation**: Ensures models have essential fields like name, description, columns, meta, and tags.
@@ -44,27 +42,28 @@ Summary
 ⚠️ Total Warnings: 3
 📂 Total Files Checked: 2
 ✅ Files Without Issues: 0
+⏱️ Duration: 0.00 seconds
 ============================================================
 Detailed Errors
 ============================================================
 📄 File: ./definitions/non_compliant_model.sqlx
   Errors:
-Error: ERROR] Missing mandatory metadata fields: description, schema.
-Error: ERROR] Model is missing partitioning information.
-Error: ERROR] Missing required labels: env, team.
+    ❌ Missing mandatory metadata fields: description, schema.
+    ❌ Model is missing partitioning information.
+    ❌ Missing required labels: env, team.
   Warnings:
-Warning: ARNING] Columns missing descriptions: user_id.
-Warning: ARNING] Description is too short; provide a more comprehensive description.
+    ⚠️ Columns missing descriptions: user_id.
+    ⚠️ Description is too short; provide a more comprehensive description.
 ------------------------------------------------------------
 📄 File: ./definitions/compliant_model.sqlx
   Errors:
-Error: ERROR] Missing mandatory metadata fields: schema, tags.
-Error: ERROR] Model is missing partitioning information.
-Error: ERROR] Missing required labels: env, team.
+    ❌ Missing mandatory metadata fields: schema, tags.
+    ❌ Model is missing partitioning information.
+    ❌ Missing required labels: env, team.
   Warnings:
-Warning: ARNING] Description is too short; provide a more comprehensive description.
+    ⚠️ Description is too short; provide a more comprehensive description.
 ------------------------------------------------------------
-Completed validation
+Completed validation in 0.00 seconds
 ```
 
 JSON output example:
