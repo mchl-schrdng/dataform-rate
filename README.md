@@ -106,24 +106,29 @@ on:
     branches:
       - main
 
-jobs:
+jjobs:
   run-dataform-rate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Dataform repo
+      - name: Checkout Dataform repo (where the action is running)
         uses: actions/checkout@v3
-      
-      - name: Clone dataform-rate repository
-        run: |
-          git clone https://github.com/mchl-schrdng/dataform-rate.git dataform-rate
-          cd dataform-rate
-          git checkout 0.1.1 # release you want to use
+
+      - name: Checkout dataform-rate repository (pinned version)
+        uses: actions/checkout@v3
+        with:
+          repository: mchl-schrdng/dataform-rate
+          path: dataform-rate
+          ref: v0.1.0  # Use the version you want to use.
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r dataform-rate/requirements.txt
 
       - name: Run Dataform Rate Check
         run: |
