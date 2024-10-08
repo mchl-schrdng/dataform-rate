@@ -8,8 +8,6 @@
 Dataform Rate is a Python tool that analyzes your Dataform project, evaluates it against best practices, and reports any violations.
 It's currently in an early stage, available as a proof of concept 
 
-![alt text](image.png)
-
 ## Features
 
 - **Metadata validation**: Ensures models have essential fields like name, description, columns, meta, and tags.
