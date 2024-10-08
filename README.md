@@ -1,5 +1,7 @@
 # Dataform Rate
 
+[![codecov](https://codecov.io/gh/username/repository/branch/main/graph/badge.svg)](https://codecov.io/gh/username/repository)
+
 Dataform Rate is a Python tool that analyzes your Dataform project, evaluates it against best practices, and reports any violations.
 It's currently in an early stage, available as a proof of concept 
 
