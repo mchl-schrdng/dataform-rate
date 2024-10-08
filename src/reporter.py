@@ -1,9 +1,12 @@
 from loguru import logger
+import time
 
 logger.remove()
 logger.add(lambda msg: print(msg, end=""), format="{message}", colorize=False)
 
 def report_violations(violations, output_format='console'):
+    start_time = time.time()
+
     if not violations:
         logger.info("✅ All models passed the best practice checks!")
         return
@@ -32,6 +35,8 @@ def report_violations(violations, output_format='console'):
     delimiter = "=" * 60
     file_separator = "-" * 60
 
+    duration = time.time() - start_time
+
     if output_format == 'console':
         logger.info(delimiter)
         logger.info("Summary")
@@ -41,6 +46,7 @@ def report_violations(violations, output_format='console'):
         logger.info(f"⚠️ Total Warnings: {total_warnings}")
         logger.info(f"📂 Total Files Checked: {total_files}")
         logger.info(f"✅ Files Without Issues: {files_without_issues}")
+        logger.info(f"⏱️ Duration: {duration:.2f} seconds")
         logger.info(delimiter)
 
         logger.info("Detailed Errors")
@@ -61,7 +67,7 @@ def report_violations(violations, output_format='console'):
 
             logger.info(file_separator)
 
-        logger.info("Completed validation")
+        logger.info(f"Completed validation in {duration:.2f} seconds")
     
     elif output_format == 'json':
         import json
@@ -70,7 +76,8 @@ def report_violations(violations, output_format='console'):
                 "total_errors": total_errors,
                 "total_warnings": total_warnings,
                 "total_files": total_files,
-                "files_without_issues": files_without_issues
+                "files_without_issues": files_without_issues,
+                "duration": f"{duration:.2f} seconds"
             },
             "violations_by_file": violations_by_file
         }

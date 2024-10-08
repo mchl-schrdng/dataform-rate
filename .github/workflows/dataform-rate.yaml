@@ -1,4 +1,4 @@
-name: Dataform Best Practice Check
+name: Dataform Rate
 
 on:
   workflow_dispatch
