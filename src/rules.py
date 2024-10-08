@@ -3,7 +3,7 @@ import re
 class RuleViolation:
     def __init__(self, message, severity='ERROR'):
         self.message = message
-        self.severity = severity.upper()  
+        self.severity = severity.upper()
 
 def has_mandatory_metadata(model):
     mandatory_fields = ['name', 'description', 'schema', 'columns', 'tags']
@@ -30,7 +30,7 @@ def naming_conventions(model):
     if violations:
         return RuleViolation(
             message=' '.join(violations),
-            severity='WARNING' 
+            severity='WARNING'
         )
 
 def columns_have_descriptions(model):
@@ -38,71 +38,57 @@ def columns_have_descriptions(model):
     missing_descriptions = [col for col, desc in columns.items() if not desc.strip()]
     if missing_descriptions:
         return RuleViolation(
-            message=f"Columns lack descriptions: {', '.join(missing_descriptions)}.",
-            severity='ERROR'
+            message=f"Columns missing descriptions: {', '.join(missing_descriptions)}.",
+            severity='WARNING'
         )
 
 def has_partitioning(model):
-    bigquery = model.get('bigquery', {})
-    partition_by = bigquery.get('partitionBy')
-    if not partition_by:
+    if not model.get('partition_by'):
         return RuleViolation(
-            message="BigQuery configuration missing 'partitionBy' field.",
-            severity='WARNING'
-        )
-    if partition_by not in model.get('columns', {}):
-        return RuleViolation(
-            message=f"Partition column '{partition_by}' is not defined in columns.",
+            message="Model is missing partitioning information.",
             severity='ERROR'
         )
 
 def has_required_labels(model):
-    bigquery = model.get('bigquery', {})
-    labels = bigquery.get('labels', {})
-    required_labels = ['cost_center'] 
-    missing_labels = [label for label in required_labels if not labels.get(label)]
+    required_labels = ['env', 'team']
+    missing_labels = [label for label in required_labels if label not in model.get('labels', [])]
     if missing_labels:
         return RuleViolation(
-            message=f"BigQuery labels missing: {', '.join(missing_labels)}.",
-            severity='WARNING'  
+            message=f"Missing required labels: {', '.join(missing_labels)}.",
+            severity='ERROR'
         )
 
 def avoid_select_star(model):
-    sql_code = model.get('sql_code', '').lower()
-    if 'select *' in sql_code:
+    if 'SELECT *' in model.get('sql', ''):
         return RuleViolation(
-            message="SQL query uses SELECT *, which is discouraged.",
-            severity='WARNING' 
+            message="Avoid using SELECT * in SQL queries.",
+            severity='WARNING'
         )
 
 def sql_line_limit(model, max_lines=200):
-    sql_code = model.get('sql_code', '')
-    line_count = sql_code.count('\n') + 1
-    if line_count > max_lines:
+    sql = model.get('sql', '')
+    if len(sql.splitlines()) > max_lines:
         return RuleViolation(
-            message=f"SQL code exceeds {max_lines} lines.",
-            severity='WARNING' 
+            message=f"SQL exceeds {max_lines} lines.",
+            severity='ERROR'
         )
 
 def comprehensive_description(model):
-    description = model.get('description', '')
-    if len(description) < 50: 
+    if len(model.get('description', '').split()) < 10:
         return RuleViolation(
-            message="Model description is too short; consider providing more details.",
-            severity='WARNING'  
+            message="Description is too short; provide a more comprehensive description.",
+            severity='WARNING'
         )
 
 def avoid_hardcoded_values(model):
-    sql_code = model.get('sql_code', '')
-    hardcoded_values = re.findall(r"[\s,(](\d+|'[^']+'|\"[^\"]+\")", sql_code)
-    if hardcoded_values:
-        unique_values = set(hardcoded_values)
+    sql = model.get('sql', '')
+    if re.search(r'\d+', sql):
         return RuleViolation(
-            message="SQL query contains hardcoded values: " + ', '.join(unique_values),
+            message="Avoid using hardcoded numeric values in SQL queries.",
             severity='WARNING'
         )
-    return None  
-    
+
+# List of rules to apply
 RULES = [
     has_mandatory_metadata,
     naming_conventions,
