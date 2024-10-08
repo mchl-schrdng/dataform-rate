@@ -2,8 +2,8 @@
 
 [![codecov](https://codecov.io/gh/mchl-schrdng/dataform-rate/main/graph/badge.svg)](https://codecov.io/gh/username/repository)
 [![ci](https://github.com/mchl-schrdng/dataform-rate/actions/workflows/ci.yaml/badge.svg)](https://github.com/mchl-schrdng/dataform-rate/actions)
-[![dataform-rate-console](https://github.com/mchl-schrdng/dataform-rate/actions/workflows/dataform-rate-console.yaml/badge.svg)](https://github.com/mchl-schrdng/dataform-rate-console/actions)
-[![dataform-rate-json](https://github.com/mchl-schrdng/dataform-rate/actions/workflows/dataform-rate-json.yaml/badge.svg)](https://github.com/mchl-schrdng/dataform-rate-json/actions)
+[![dataform-rate-console](https://github.com/mchl-schrdng/dataform-rate/actions/workflows/dataform-rate.yaml/badge.svg)](https://github.com/mchl-schrdng/dataform-rate-console/actions)
+[![dataform-rate-json](https://github.com/mchl-schrdng/dataform-rate/actions/workflows/dataform-rate.yaml/badge.svg)](https://github.com/mchl-schrdng/dataform-rate-json/actions)
 
 
 Dataform Rate is a Python tool that analyzes your Dataform project, evaluates it against best practices, and reports any violations.
