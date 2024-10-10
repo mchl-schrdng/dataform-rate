@@ -72,7 +72,7 @@ def sql_line_limit(model, max_lines=200):
         )
 
 def comprehensive_description(model):
-    if len(model.get('description', '').split()) < 10:
+    if len(model.get('description', '').split()) < 5:
         return RuleViolation(
             message="Description is too short; provide a more comprehensive description.",
             severity='WARNING'
