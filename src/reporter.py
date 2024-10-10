@@ -4,7 +4,7 @@ import time
 logger.remove()
 logger.add(lambda msg: print(msg, end=""), format="{message}", colorize=False)
 
-def report_violations(violations, output_format='console'):
+def report_violations(violations, all_checked_files, output_format='console'):
     start_time = time.time()
 
     if not violations:
@@ -15,13 +15,9 @@ def report_violations(violations, output_format='console'):
     total_errors = 0
     total_warnings = 0
 
-    checked_files = set()
-
     for v in violations:
         file_path = v['file_path']
         severity = v['severity']
-
-        checked_files.add(file_path)
 
         if file_path not in violations_by_file:
             violations_by_file[file_path] = {'errors': [], 'warnings': []}
@@ -33,8 +29,8 @@ def report_violations(violations, output_format='console'):
             violations_by_file[file_path]['warnings'].append(v)
             total_warnings += 1
 
-    total_files = len(checked_files)
-    files_without_issues = total_files - len([f for f in checked_files if f in violations_by_file])
+    total_files = len(all_checked_files)
+    files_without_issues = len([f for f in all_checked_files if f not in violations_by_file])
 
     delimiter = "=" * 60
     file_separator = "-" * 60
