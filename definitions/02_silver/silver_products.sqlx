@@ -1,0 +1,24 @@
+config {
+    type: "table",
+    schema: "ANONYMIZED_SCHEMA",
+    name: "anonymized_bdl_products",
+    assertions: {
+        nonNull: [
+            "product_id",
+            "product_name",
+            "product_category",
+            "product_price"
+        ],
+        rowConditions: [
+            "product_price > 0"
+        ]
+    }
+}
+
+SELECT
+  product_id,
+  product_name,
+  product_category,
+  CAST(product_price AS numeric) AS product_price_typed
+FROM
+  ${ref("ANONYMIZED_SCHEMA", "anonymized_products")}
