@@ -4,7 +4,7 @@ from rules import (
     naming_conventions,
     columns_have_descriptions,
     has_partitioning,
-    has_required_labels,
+    has_any_labels,
     avoid_select_star,
     sql_line_limit,
     comprehensive_description,

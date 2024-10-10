@@ -49,12 +49,10 @@ def has_partitioning(model):
             severity='ERROR'
         )
 
-def has_required_labels(model):
-    required_labels = ['env', 'team']
-    missing_labels = [label for label in required_labels if label not in model.get('labels', [])]
-    if missing_labels:
+def has_any_labels(model):
+    if not model.get('labels'):
         return RuleViolation(
-            message=f"Missing required labels: {', '.join(missing_labels)}.",
+            message="No labels found. At least one label is required.",
             severity='ERROR'
         )
 
@@ -88,13 +86,12 @@ def avoid_hardcoded_values(model):
             severity='WARNING'
         )
 
-# List of rules to apply
 RULES = [
     has_mandatory_metadata,
     naming_conventions,
     columns_have_descriptions,
     has_partitioning,
-    has_required_labels,
+    has_any_labels,
     avoid_select_star,
     sql_line_limit,
     comprehensive_description,
