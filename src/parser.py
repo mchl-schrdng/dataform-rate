@@ -3,7 +3,7 @@ import re
 import json
 import logging
 
-def get_all_models(model_path='../models/**/*.sqlx'):
+def get_all_models(model_path='../definitions/**/*.sqlx'):
     model_files = glob.glob(model_path, recursive=True)
     logging.debug(f"Found model files: {model_files}")
     models = []
@@ -59,28 +59,26 @@ def parse_model(content, file_path):
         'name': config.get('name', ''),
         'description': config.get('description', ''),
         'columns': config.get('columns', {}),
+        'schema': config.get('schema', ''),
         'meta': config.get('meta', {}),
         'tags': config.get('tags', []),
+        'bigquery': config.get('bigquery', {}),
         'sql_code': sql_code,
     }
+
+    bigquery = config.get('bigquery', {})
+    model['partition_by'] = bigquery.get('partitionBy', '')
+    model['labels'] = bigquery.get('labels', {})
 
     return model
 
 def convert_config_to_json(config_content):
+    # Clean up comments
     config_content = re.sub(r'//.*', '', config_content)
-
     config_content = re.sub(r'/\*[\s\S]*?\*/', '', config_content)
-
     config_content = re.sub(r'#.*', '', config_content)
-
-    config_content = re.sub(r'\b\w+\.\w+(?:\.\w+)*', '""', config_content)
-
-    config_content = config_content.replace("'", '"')
-
     config_content = re.sub(r'(\b[\w\-]+\b)\s*:', r'"\1":', config_content)
-
     config_content = re.sub(r',\s*(\}|\])', r'\1', config_content)
-
     config_content = re.sub(r'\s+', ' ', config_content).strip()
 
     json_str = '{' + config_content + '}'

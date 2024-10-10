@@ -49,12 +49,10 @@ def has_partitioning(model):
             severity='ERROR'
         )
 
-def has_required_labels(model):
-    required_labels = ['env', 'team']
-    missing_labels = [label for label in required_labels if label not in model.get('labels', [])]
-    if missing_labels:
+def has_any_labels(model):
+    if not model.get('labels'):
         return RuleViolation(
-            message=f"Missing required labels: {', '.join(missing_labels)}.",
+            message="No labels found. At least one label is required.",
             severity='ERROR'
         )
 
@@ -73,10 +71,17 @@ def sql_line_limit(model, max_lines=200):
             severity='ERROR'
         )
 
-def comprehensive_description(model):
-    if len(model.get('description', '').split()) < 10:
+def comprehensive_column_descriptions(model):
+    violations = []
+    columns = model.get('columns', {})
+
+    for column, description in columns.items():
+        if len(description.split()) < 5:
+            violations.append(f"Column '{column}' has a description that is too short.")
+
+    if violations:
         return RuleViolation(
-            message="Description is too short; provide a more comprehensive description.",
+            message="; ".join(violations),
             severity='WARNING'
         )
 
@@ -88,15 +93,14 @@ def avoid_hardcoded_values(model):
             severity='WARNING'
         )
 
-# List of rules to apply
 RULES = [
     has_mandatory_metadata,
     naming_conventions,
     columns_have_descriptions,
     has_partitioning,
-    has_required_labels,
+    has_any_labels,
     avoid_select_star,
     sql_line_limit,
-    comprehensive_description,
+    comprehensive_column_descriptions,
     avoid_hardcoded_values
 ]

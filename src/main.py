@@ -1,6 +1,6 @@
 import argparse
 import logging
-from model_parser import get_all_models
+from parser import get_all_models
 from evaluator import evaluate_models
 from reporter import report_violations
 
@@ -22,11 +22,15 @@ def main():
     logging.debug("Starting Dataform Rate Tool...")
 
     models = get_all_models(model_path=args.model_path)
+    all_checked_files = [model['file_path'] for model in models]
+
     if not models:
         print("No models found. Please check the model path and ensure .sqlx files are present.")
         return
+
     violations = evaluate_models(models, max_lines=args.max_lines)
-    report_violations(violations, output_format=args.output_format)
+
+    report_violations(violations, all_checked_files, output_format=args.output_format)
 
 if __name__ == '__main__':
     main()

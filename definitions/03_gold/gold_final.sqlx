@@ -2,7 +2,14 @@ config {
     type: "table",
     description: "Description of the table",
     schema: "ANONYMIZED_SCHEMA",
-    name: "anonymized_final_layer",
+    name: "anonymized_golder_final",
+    bigquery: {
+        partitionBy: "DATE(order_date)",
+        labels: {
+            LABEL1: "VALUE_OF_LABEL1"
+        }
+    },
+    tags: ["daily", "hourly"],
     columns: {
         order_id: "Unique identifier for the order.",
         order_date: "The date when the order was placed.",
@@ -12,7 +19,6 @@ config {
         total_amount: "The total amount for the order (quantity * price).",
         product_name: "Name of the product ordered.",
         product_category: "Category to which the product belongs."
-        }
     },
     assertions: {
         nonNull: [
@@ -42,8 +48,8 @@ SELECT
   p.product_name,
   p.product_category
 FROM
-  ${ref("ANONYMIZED_SCHEMA", "anonymized_bdl_sales_orders")} so
+  ${ref("ANONYMIZED_SCHEMA", "silver_orders")} so
 JOIN
-  ${ref("ANONYMIZED_SCHEMA", "anonymized_bdl_products")} p
+  ${ref("ANONYMIZED_SCHEMA", "silver_products")} p
 ON
   so.product_id = p.product_id
