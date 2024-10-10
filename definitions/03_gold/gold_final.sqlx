@@ -4,8 +4,12 @@ config {
     schema: "ANONYMIZED_SCHEMA",
     name: "anonymized_golder_final",
     bigquery: {
-        partitionBy: "DATE(order_date)"
+        partitionBy: "DATE(order_date)",
+        labels: {
+            LABEL1: "VALUE_OF_LABEL1"
+        }
     },
+    tags: ["daily", "hourly"],
     columns: {
         order_id: "Unique identifier for the order.",
         order_date: "The date when the order was placed.",
