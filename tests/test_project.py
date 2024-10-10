@@ -4,7 +4,9 @@ from src.rules import has_mandatory_metadata
 def test_has_mandatory_metadata():
     model = {
         'name': 'test_model',
+        'description': 'A test model',
+        'schema': 'test_schema',
         'columns': {'id': {'description': 'Identifier'}},
-        'tags': []
+        'tags': ['important']
     }
-    assert isinstance(has_mandatory_metadata(model), type(None)), "Expected no violations when metadata is valid"
+    assert has_mandatory_metadata(model) is None, "Expected no violations when metadata is valid"
