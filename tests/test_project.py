@@ -1,6 +1,6 @@
 import pytest
 from src.rules import has_mandatory_metadata, naming_conventions, RuleViolation
-from src.model_parser import parse_model
+from src.parser import parse_model
 from src.evaluator import evaluate_models
 from src.reporter import report_violations
 
