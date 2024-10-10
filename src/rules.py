@@ -71,13 +71,20 @@ def sql_line_limit(model, max_lines=200):
             severity='ERROR'
         )
 
-def comprehensive_description(model):
-    if len(model.get('description', '').split()) < 5:
+def comprehensive_column_descriptions(model):
+    violations = []
+    columns = model.get('columns', {})
+
+    for column, description in columns.items():
+        if len(description.split()) < 5:
+            violations.append(f"Column '{column}' has a description that is too short.")
+
+    if violations:
         return RuleViolation(
-            message="Description is too short; provide a more comprehensive description.",
+            message="; ".join(violations),
             severity='WARNING'
         )
-
+        
 def avoid_hardcoded_values(model):
     sql = model.get('sql', '')
     if re.search(r'\d+', sql):
