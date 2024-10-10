@@ -3,7 +3,7 @@ import re
 import json
 import logging
 
-def get_all_models(model_path='../models/**/*.sqlx'):
+def get_all_models(model_path='../definitions/**/*.sqlx'):
     model_files = glob.glob(model_path, recursive=True)
     logging.debug(f"Found model files: {model_files}")
     models = []
@@ -59,6 +59,7 @@ def parse_model(content, file_path):
         'name': config.get('name', ''),
         'description': config.get('description', ''),
         'columns': config.get('columns', {}),
+        'schema': config.get('schema', ''),
         'meta': config.get('meta', {}),
         'tags': config.get('tags', []),
         'bigquery': config.get('bigquery', {}),
