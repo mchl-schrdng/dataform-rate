@@ -4,9 +4,7 @@ from src.parser import parse_model
 from src.evaluator import evaluate_models
 from src.reporter import report_violations
 
-# Test Rule Functions
-def test_has_mandatory_metadata():
-    """Test the has_mandatory_metadata rule."""
+def test_has_mandatory_metadata_missing_metadata():
     model = {
         'name': 'test_model',
         'description': 'A test model',
@@ -18,10 +16,10 @@ def test_has_mandatory_metadata():
         'meta': {},
         'tags': []
     }
-    assert has_mandatory_metadata(model) is None
+    result = has_mandatory_metadata(model)
+    assert isinstance(result, RuleViolation), f"Expected RuleViolation but got {result}."
 
-def test_has_mandatory_metadata():
-    """Test the has_mandatory_metadata rule."""
+def test_has_mandatory_metadata_success():
     model = {
         'name': 'test_model',
         'description': 'A test model',
@@ -30,48 +28,70 @@ def test_has_mandatory_metadata():
             'id': {'description': 'Identifier'},
             'name': {'description': 'Name of the entity'}
         },
-        'meta': {},  # Ensure this exists if the rule requires it, even if empty.
-        'tags': ['important']  # Non-empty tags to satisfy the rule
+        'tags': ['important']
     }
-    
     result = has_mandatory_metadata(model)
     assert result is None, f"Expected None but got {result.message}."
 
 def test_naming_conventions():
-    """Test the naming_conventions rule."""
     valid_model = {'name': 'valid_name', 'columns': {'valid_column': 'Valid column'}}
-    assert naming_conventions(valid_model) is None
+    assert naming_conventions(valid_model) is None, "Expected None for valid model names."
 
     invalid_model = {'name': 'InvalidName', 'columns': {'InvalidColumn': 'Invalid column'}}
     result = naming_conventions(invalid_model)
-    assert isinstance(result, RuleViolation)
-    assert "snake_case" in result.message
+    assert isinstance(result, RuleViolation), "Expected RuleViolation for invalid model names."
+    assert "snake_case" in result.message, f"Expected snake_case violation, got {result.message}."
 
 def test_parse_model_violation():
-    """Test invalid model content."""
-    content = '''model {name: "invalid_model"}'''  # Missing description and columns
+    content = '''model {name: "invalid_model"}'''
     model = parse_model(content, "path/to/model.sqlx")
-    assert model is None
+    assert model is None, "Expected None for invalid model parsing."
 
+def test_parse_model_success():
+    content = '''model {name: "valid_model", description: "A valid model"}'''
+    model = parse_model(content, "path/to/model.sqlx")
+    assert model is not None, "Expected parsed model object."
 
-# Test Evaluator
-def test_evaluate_models():
-    """Test model evaluation."""
-    model = {'name': 'test_model', 'file_path': 'path/to/model.sqlx'}
+def test_evaluate_models_no_violations():
+    model = {
+        'name': 'test_model',
+        'file_path': 'path/to/model.sqlx',
+        'description': 'Test model'
+    }
     violations = evaluate_models([model])
-    assert len(violations) >= 0
+    assert len(violations) == 0, f"Expected no violations, got {len(violations)}."
 
-# Test Reporter Functions
+def test_evaluate_models_with_violations():
+    model = {
+        'name': 'Invalid_Model',
+        'file_path': 'path/to/model.sqlx',
+        'description': ''
+    }
+    violations = evaluate_models([model])
+    assert len(violations) > 0, "Expected some violations, but found none."
+
 def test_report_violations_console(capsys):
-    """Test console output of report_violations."""
-    violations = [{'model': 'test_model', 'message': 'Test violation', 'severity': 'ERROR', 'file_path': 'test_path.sqlx'}]
+    violations = [
+        {
+            'model': 'test_model',
+            'message': 'Test violation',
+            'severity': 'ERROR',
+            'file_path': 'test_path.sqlx'
+        }
+    ]
     report_violations(violations, output_format='console')
     captured = capsys.readouterr()
-    assert "Test violation" in captured.out
+    assert "Test violation" in captured.out, "Expected violation message in console output."
 
 def test_report_violations_json(capsys):
-    """Test JSON output of report_violations."""
-    violations = [{'model': 'test_model', 'message': 'Test violation', 'severity': 'ERROR', 'file_path': 'test_path.sqlx'}]
+    violations = [
+        {
+            'model': 'test_model',
+            'message': 'Test violation',
+            'severity': 'ERROR',
+            'file_path': 'test_path.sqlx'
+        }
+    ]
     report_violations(violations, output_format='json')
     captured = capsys.readouterr()
-    assert '"message": "Test violation"' in captured.out
+    assert '"message": "Test violation"' in captured.out, "Expected JSON formatted violation in output."
