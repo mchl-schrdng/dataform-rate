@@ -1,22 +1,6 @@
-import glob
-import re
 import json
+import re
 import logging
-
-def get_all_models(model_path='../definitions/**/*.sqlx'):
-    model_files = glob.glob(model_path, recursive=True)
-    logging.debug(f"Found model files: {model_files}")
-    models = []
-
-    for file_path in model_files:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-            model = parse_model(content, file_path)
-            if model:
-                models.append(model)
-            else:
-                logging.warning(f"Failed to parse model in file: {file_path}")
-    return models
 
 def parse_model(content, file_path):
     config_start_match = re.search(r'config\s*\{', content)
@@ -65,6 +49,10 @@ def parse_model(content, file_path):
         'bigquery': config.get('bigquery', {}),
         'sql_code': sql_code,
     }
+
+    bigquery = config.get('bigquery', {})
+    model['partition_by'] = bigquery.get('partitionBy', '')
+    model['labels'] = bigquery.get('labels', {})
 
     return model
 
