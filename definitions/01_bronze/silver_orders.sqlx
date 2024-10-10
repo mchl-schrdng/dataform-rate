@@ -1,0 +1,10 @@
+config {
+    type: "declaration",
+    schema: "ANONYMIZED_SCHEMA",
+    name: "anonymized_sales_orders"
+}
+
+SELECT
+  *
+FROM
+  `project-name.ANONYMIZED_SCHEMA.anonymized_sales_orders`

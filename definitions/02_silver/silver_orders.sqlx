@@ -1,0 +1,28 @@
+config {
+    type: "table",
+    schema: "ANONYMIZED_SCHEMA",
+    name: "anonymized_bdl_sales_orders",
+    assertions: {
+        nonNull: [
+            "order_id",
+            "customer_id",
+            "product_id",
+            "order_date",
+            "quantity",
+            "price"
+        ],
+        rowConditions: [
+            "LENGTH(order_id) = 4"
+        ]
+    },
+}
+
+SELECT
+  order_id,
+  customer_id,
+  product_id,
+  CAST(order_date AS TIMESTAMP) AS order_date,
+  CAST(quantity AS INT64) AS quantity,
+  CAST(price AS NUMERIC) AS price
+FROM
+  ${ref("ANONYMIZED_SCHEMA", "anonymized_sales_orders")}

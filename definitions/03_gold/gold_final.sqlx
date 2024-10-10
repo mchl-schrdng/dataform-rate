@@ -1,0 +1,49 @@
+config {
+    type: "table",
+    description: "Description of the table",
+    schema: "ANONYMIZED_SCHEMA",
+    name: "anonymized_final_layer",
+    columns: {
+        order_id: "Unique identifier for the order.",
+        order_date: "The date when the order was placed.",
+        customer_id: "Unique identifier for the customer who placed the order.",
+        quantity: "The quantity of products ordered.",
+        price: "The price of a single product unit.",
+        total_amount: "The total amount for the order (quantity * price).",
+        product_name: "Name of the product ordered.",
+        product_category: "Category to which the product belongs."
+        }
+    },
+    assertions: {
+        nonNull: [
+            "order_id",
+            "product_id",
+            "customer_id",
+            "order_date",
+            "quantity",
+            "price",
+            "product_name",
+            "product_category"
+        ],
+        rowConditions: [
+            "quantity > 0",
+            "price > 0"
+        ]
+    }
+}
+
+SELECT
+  so.order_id,
+  so.order_date AS order_date,
+  so.customer_id,
+  so.quantity AS quantity,
+  so.price AS price,
+  (so.quantity * so.price) AS total_amount,
+  p.product_name,
+  p.product_category
+FROM
+  ${ref("ANONYMIZED_SCHEMA", "anonymized_bdl_sales_orders")} so
+JOIN
+  ${ref("ANONYMIZED_SCHEMA", "anonymized_bdl_products")} p
+ON
+  so.product_id = p.product_id
