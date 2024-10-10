@@ -84,7 +84,7 @@ def comprehensive_column_descriptions(model):
             message="; ".join(violations),
             severity='WARNING'
         )
-        
+
 def avoid_hardcoded_values(model):
     sql = model.get('sql', '')
     if re.search(r'\d+', sql):
@@ -101,6 +101,6 @@ RULES = [
     has_any_labels,
     avoid_select_star,
     sql_line_limit,
-    comprehensive_description,
+    comprehensive_column_descriptions,
     avoid_hardcoded_values
 ]

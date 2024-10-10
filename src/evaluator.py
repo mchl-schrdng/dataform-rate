@@ -7,7 +7,7 @@ from rules import (
     has_any_labels,
     avoid_select_star,
     sql_line_limit,
-    comprehensive_description,
+    comprehensive_column_descriptions,
     avoid_hardcoded_values
 )
 
