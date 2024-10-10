@@ -14,7 +14,7 @@ config {
         rowConditions: [
             "LENGTH(order_id) = 4"
         ]
-    },
+    }
 }
 
 SELECT
