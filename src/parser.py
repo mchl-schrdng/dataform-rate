@@ -61,6 +61,7 @@ def parse_model(content, file_path):
         'columns': config.get('columns', {}),
         'meta': config.get('meta', {}),
         'tags': config.get('tags', []),
+        'bigquery': config.get('bigquery', {}),
         'sql_code': sql_code,
     }
 
@@ -68,19 +69,10 @@ def parse_model(content, file_path):
 
 def convert_config_to_json(config_content):
     config_content = re.sub(r'//.*', '', config_content)
-
     config_content = re.sub(r'/\*[\s\S]*?\*/', '', config_content)
-
     config_content = re.sub(r'#.*', '', config_content)
-
-    config_content = re.sub(r'\b\w+\.\w+(?:\.\w+)*', '""', config_content)
-
-    config_content = config_content.replace("'", '"')
-
     config_content = re.sub(r'(\b[\w\-]+\b)\s*:', r'"\1":', config_content)
-
     config_content = re.sub(r',\s*(\}|\])', r'\1', config_content)
-
     config_content = re.sub(r'\s+', ' ', config_content).strip()
 
     json_str = '{' + config_content + '}'
