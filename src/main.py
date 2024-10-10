@@ -1,6 +1,6 @@
 import argparse
 import logging
-from model_parser import get_all_models
+from parser import get_all_models
 from evaluator import evaluate_models
 from reporter import report_violations
 
