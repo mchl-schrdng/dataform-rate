@@ -15,9 +15,13 @@ def report_violations(violations, output_format='console'):
     total_errors = 0
     total_warnings = 0
 
+    checked_files = set()
+
     for v in violations:
         file_path = v['file_path']
         severity = v['severity']
+
+        checked_files.add(file_path)
 
         if file_path not in violations_by_file:
             violations_by_file[file_path] = {'errors': [], 'warnings': []}
@@ -29,8 +33,8 @@ def report_violations(violations, output_format='console'):
             violations_by_file[file_path]['warnings'].append(v)
             total_warnings += 1
 
-    total_files = len(violations_by_file)
-    files_without_issues = total_files - len([f for f in violations_by_file if violations_by_file[f]['errors'] or violations_by_file[f]['warnings']])
+    total_files = len(checked_files)
+    files_without_issues = total_files - len([f for f in checked_files if f in violations_by_file])
 
     delimiter = "=" * 60
     file_separator = "-" * 60
