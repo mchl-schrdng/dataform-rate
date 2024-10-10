@@ -1,5 +1,5 @@
 import pytest
-import src.rules
+from src.rules import *
 
 def test_has_mandatory_metadata():
     model = {
