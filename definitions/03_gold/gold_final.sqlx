@@ -2,7 +2,7 @@ config {
     type: "table",
     description: "Description of the table",
     schema: "ANONYMIZED_SCHEMA",
-    name: "anonymized_final_layer",
+    name: "anonymized_golder_final",
     columns: {
         order_id: "Unique identifier for the order.",
         order_date: "The date when the order was placed.",
@@ -42,8 +42,8 @@ SELECT
   p.product_name,
   p.product_category
 FROM
-  ${ref("ANONYMIZED_SCHEMA", "anonymized_bdl_sales_orders")} so
+  ${ref("ANONYMIZED_SCHEMA", "silver_orders")} so
 JOIN
-  ${ref("ANONYMIZED_SCHEMA", "anonymized_bdl_products")} p
+  ${ref("ANONYMIZED_SCHEMA", "silver_products")} p
 ON
   so.product_id = p.product_id

@@ -1,7 +1,7 @@
 config {
     type: "declaration",
     schema: "ANONYMIZED_SCHEMA",
-    name: "anonymized_customers"
+    name: "anonymized_bronze_customers"
 }
 
 SELECT

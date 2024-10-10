@@ -1,7 +1,7 @@
 config {
     type: "table",
     schema: "ANONYMIZED_SCHEMA",
-    name: "anonymized_bdl_products",
+    name: "anonymized_silver_products",
     assertions: {
         nonNull: [
             "product_id",
@@ -21,4 +21,4 @@ SELECT
   product_category,
   CAST(product_price AS numeric) AS product_price_typed
 FROM
-  ${ref("ANONYMIZED_SCHEMA", "anonymized_products")}
+  ${ref("ANONYMIZED_SCHEMA", "bronze_products")}
