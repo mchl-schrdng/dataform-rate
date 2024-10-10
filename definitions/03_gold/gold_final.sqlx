@@ -3,6 +3,9 @@ config {
     description: "Description of the table",
     schema: "ANONYMIZED_SCHEMA",
     name: "anonymized_golder_final",
+    bigquery: {
+        partitionBy: "DATE(order_date)"
+    },
     columns: {
         order_id: "Unique identifier for the order.",
         order_date: "The date when the order was placed.",
@@ -12,7 +15,6 @@ config {
         total_amount: "The total amount for the order (quantity * price).",
         product_name: "Name of the product ordered.",
         product_category: "Category to which the product belongs."
-        }
     },
     assertions: {
         nonNull: [
