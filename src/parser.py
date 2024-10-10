@@ -1,6 +1,22 @@
-import json
+import glob
 import re
+import json
 import logging
+
+def get_all_models(model_path='../definitions/**/*.sqlx'):
+    model_files = glob.glob(model_path, recursive=True)
+    logging.debug(f"Found model files: {model_files}")
+    models = []
+
+    for file_path in model_files:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            model = parse_model(content, file_path)
+            if model:
+                models.append(model)
+            else:
+                logging.warning(f"Failed to parse model in file: {file_path}")
+    return models
 
 def parse_model(content, file_path):
     config_start_match = re.search(r'config\s*\{', content)
@@ -57,6 +73,7 @@ def parse_model(content, file_path):
     return model
 
 def convert_config_to_json(config_content):
+    # Clean up comments
     config_content = re.sub(r'//.*', '', config_content)
     config_content = re.sub(r'/\*[\s\S]*?\*/', '', config_content)
     config_content = re.sub(r'#.*', '', config_content)
