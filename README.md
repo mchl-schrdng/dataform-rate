@@ -39,52 +39,82 @@ Console Output Example:
 ============================================================
 Summary
 ============================================================
-❌ Total Errors: 6
-⚠️ Total Warnings: 3
-📂 Total Files Checked: 2
+❌ Total Errors: 15
+⚠️ Total Warnings: 0
+📂 Total Files Checked: 5
 ✅ Files Without Issues: 0
 ⏱️ Duration: 0.00 seconds
 ============================================================
 Detailed Errors
 ============================================================
-📄 File: ./definitions/non_compliant_model.sqlx
+📄 File: ./definitions/02_silver/silver_products.sqlx
   Errors:
-    ❌ Missing mandatory metadata fields: description, schema.
+    ❌ Missing mandatory metadata fields: description, columns, tags.
     ❌ Model is missing partitioning information.
-    ❌ Missing required labels: env, team.
-  Warnings:
-    ⚠️ Columns missing descriptions: user_id.
-    ⚠️ Description is too short; provide a more comprehensive description.
+    ❌ No labels found. At least one label is required.
 ------------------------------------------------------------
-📄 File: ./definitions/compliant_model.sqlx
+📄 File: ./definitions/02_silver/silver_orders.sqlx
   Errors:
-    ❌ Missing mandatory metadata fields: schema, tags.
+    ❌ Missing mandatory metadata fields: description, columns, tags.
     ❌ Model is missing partitioning information.
-    ❌ Missing required labels: env, team.
-  Warnings:
-    ⚠️ Description is too short; provide a more comprehensive description.
+    ❌ No labels found. At least one label is required.
+------------------------------------------------------------
+📄 File: ./definitions/01_bronze/bronze_products.sqlx
+  Errors:
+    ❌ Missing mandatory metadata fields: description, columns, tags.
+    ❌ Model is missing partitioning information.
+    ❌ No labels found. At least one label is required.
+------------------------------------------------------------
+📄 File: ./definitions/01_bronze/bronze_orders.sqlx
+  Errors:
+    �� Missing mandatory metadata fields: description, columns, tags.
+    ❌ Model is missing partitioning information.
+    ❌ No labels found. At least one label is required.
+------------------------------------------------------------
+📄 File: ./definitions/01_bronze/bronze_customers.sqlx
+  Errors:
+    ❌ Missing mandatory metadata fields: description, columns, tags.
+    ❌ Model is missing partitioning information.
+    ❌ No labels found. At least one label is required.
 ------------------------------------------------------------
 Completed validation in 0.00 seconds
 ```
 
 JSON output example:
 ```json
-[
-  {
-    "model": "model_1",
-    "file_path": "../definitions/model_1.sqlx",
-    "rule": "has_mandatory_metadata",
-    "message": "Missing mandatory metadata fields: description, tags.",
-    "severity": "ERROR"
+{
+  "summary": {
+    "total_errors": 15,
+    "total_warnings": 0,
+    "total_files": 6,
+    "files_without_issues": 1,
+    "duration": "0.00 seconds"
   },
-  {
-    "model": "model_2",
-    "file_path": "../definitions/model_2.sqlx",
-    "rule": "sql_line_limit",
-    "message": "SQL code exceeds 200 lines.",
-    "severity": "WARNING"
-  }
-]
+  "violations_by_file": {
+    "./definitions/02_silver/silver_products.sqlx": {
+      "errors": [
+        {
+          "model": "anonymized_silver_products",
+          "file_path": "./definitions/02_silver/silver_products.sqlx",
+          "rule": "has_mandatory_metadata",
+          "message": "Missing mandatory metadata fields: description, columns, tags.",
+          "severity": "ERROR"
+        },
+        {
+          "model": "anonymized_silver_products",
+          "file_path": "./definitions/02_silver/silver_products.sqlx",
+          "rule": "has_partitioning",
+          "message": "Model is missing partitioning information.",
+          "severity": "ERROR"
+        },
+        {
+          "model": "anonymized_silver_products",
+          "file_path": "./definitions/02_silver/silver_products.sqlx",
+          "rule": "has_any_labels",
+          "message": "No labels found. At least one label is required.",
+          "severity": "ERROR"
+        }
+      ]
 ```
 
 ## How to add new rules
@@ -111,7 +141,7 @@ on:
     branches:
       - main
 
-jjobs:
+jobs:
   run-dataform-rate:
     runs-on: ubuntu-latest
 
@@ -124,7 +154,7 @@ jjobs:
         with:
           repository: mchl-schrdng/dataform-rate
           path: dataform-rate
-          ref: v0.1.0  # Use the version you want to use.
+          ref: v0.1.0  # Ping the version you want to use.
 
       - name: Set up Python
         uses: actions/setup-python@v4
