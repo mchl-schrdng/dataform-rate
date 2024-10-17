@@ -1,0 +1,25 @@
+name: SQLFluff
+
+on:
+  workflow_dispatch:
+
+jobs:
+  lint-sql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install sqlfluff
+        run: |
+          npm install -g sqlfluff
+
+      - name: Run sqlfluff lint
+        run: |
+          sqlfluff lint --dialect bigquery DATAFORM-RATE/definitions/
