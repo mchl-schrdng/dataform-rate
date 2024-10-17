@@ -22,4 +22,4 @@ jobs:
 
       - name: Run sqlfluff lint
         run: |
-          sqlfluff lint --dialect bigquery DATAFORM-RATE/definitions/
+          sqlfluff lint --dialect bigquery definitions/
