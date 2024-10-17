@@ -1,4 +1,4 @@
-name: SQLFluff
+name: SQL Linting
 
 on:
   workflow_dispatch:
@@ -11,14 +11,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          node-version: '14'
+          python-version: '3.10' 
 
       - name: Install sqlfluff
         run: |
-          npm install -g sqlfluff
+          pip install sqlfluff
 
       - name: Run sqlfluff lint
         run: |
