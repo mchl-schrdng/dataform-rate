@@ -56,6 +56,7 @@ def parse_model(content, file_path):
 
     model = {
         'file_path': file_path,
+        'type': config.get('type', ''),   # <--- Add this
         'name': config.get('name', ''),
         'description': config.get('description', ''),
         'columns': config.get('columns', {}),
@@ -73,7 +74,6 @@ def parse_model(content, file_path):
     return model
 
 def convert_config_to_json(config_content):
-    # Clean up comments
     config_content = re.sub(r'//.*', '', config_content)
     config_content = re.sub(r'/\*[\s\S]*?\*/', '', config_content)
     config_content = re.sub(r'#.*', '', config_content)

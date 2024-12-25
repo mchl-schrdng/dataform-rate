@@ -43,6 +43,9 @@ def columns_have_descriptions(model):
         )
 
 def has_partitioning(model):
+    if model.get('type') != 'table':
+        return None
+    
     if not model.get('partition_by'):
         return RuleViolation(
             message="Model is missing partitioning information.",
